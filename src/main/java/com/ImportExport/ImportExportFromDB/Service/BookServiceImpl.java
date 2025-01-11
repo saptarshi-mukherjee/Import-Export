@@ -22,7 +22,7 @@ public class BookServiceImpl implements BookService {
             if(ExcelHelper.checkExcelFile(file)) {
                 List<Book> books = ExcelHelper.convertToList(file.getInputStream());
                 for (Book book : books) {
-                    System.out.println(book.getTitle());
+                    //System.out.println(book.getTitle());
                     book_repo.save(book);
                 }
             }

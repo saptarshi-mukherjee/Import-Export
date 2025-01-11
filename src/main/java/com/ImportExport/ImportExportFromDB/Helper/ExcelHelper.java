@@ -21,16 +21,15 @@ public class ExcelHelper {
     public static List<Book> convertToList(InputStream file_ip) {
         List<Book> list=new ArrayList<>();
         try {
-            XSSFWorkbook workbook = new XSSFWorkbook(file_ip);
+
+            XSSFWorkbook workbook=new XSSFWorkbook(file_ip);
             XSSFSheet sheet=workbook.getSheetAt(0);
-            int index=0, cell_id=0;
             for(Row row : sheet) {
-                cell_id=0;
-                if(index++==0)
+                if(row.getRowNum()==0)
                     continue;
                 Book book=new Book();
                 for(Cell cell : row) {
-                    switch(cell_id) {
+                    switch(cell.getColumnIndex()) {
                         case 0:
                             book.setTitle(cell.getStringCellValue());
                             break;
@@ -49,10 +48,8 @@ public class ExcelHelper {
                         default:
                             break;
                     }
-                    cell_id++;
                 }
                 list.add(book);
-                //index++;
             }
         }
         catch(Exception e) {
