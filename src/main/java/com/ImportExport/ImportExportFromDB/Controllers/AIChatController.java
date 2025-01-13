@@ -1,15 +1,16 @@
 package com.ImportExport.ImportExportFromDB.Controllers;
 
 
+import com.ImportExport.ImportExportFromDB.DTO.ChatPrompt;
+import com.ImportExport.ImportExportFromDB.Service.BookService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,10 +18,14 @@ import java.util.List;
 @RequestMapping("/chat")
 public class AIChatController {
 
+    private BookService book_service;
     private ChatClient chat_client;
 
-    public AIChatController(ChatClient.Builder builder) {
-        this.chat_client=builder.build();
+    public AIChatController(BookService book_service, ChatClient.Builder builder) {
+        this.chat_client=builder
+                .defaultAdvisors(new PromptChatMemoryAdvisor(new InMemoryChatMemory()))
+                .build();
+        this.book_service=book_service;
     }
 
 
@@ -45,5 +50,10 @@ public class AIChatController {
         Prompt prompt=new Prompt(List.of(system_msg,user_msg));
         ChatResponse response=chat_client.prompt(prompt).call().chatResponse();
         return response.getResult().getOutput().getContent();
+    }
+
+    @GetMapping("")
+    public String chat(@RequestBody ChatPrompt chat_prompt) {
+        return book_service.chatBot(chat_prompt.getMessage());
     }
 }

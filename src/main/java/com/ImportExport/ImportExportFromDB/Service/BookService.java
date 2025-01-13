@@ -8,4 +8,5 @@ import java.util.List;
 public interface BookService {
     public void importBooks(MultipartFile file);
     public List<Book> getAllBooks();
+    public String chatBot(String msg);
 }

@@ -25,7 +25,7 @@ public class ExcelHelper {
             XSSFWorkbook workbook=new XSSFWorkbook(file_ip);
             XSSFSheet sheet=workbook.getSheetAt(0);
             for(Row row : sheet) {
-                if(row.getRowNum()==0)
+                if(row.getRowNum()==0 || row.getRowNum()==2)
                     continue;
                 Book book=new Book();
                 for(Cell cell : row) {
